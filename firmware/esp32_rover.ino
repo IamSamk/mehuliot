@@ -5,14 +5,14 @@
 #include <DHT.h>
 
 // Replace with your Wi-Fi credentials
-const char *WIFI_SSID = "replace_with_ssid";
-const char *WIFI_PASSWORD = "replace_with_password";
+const char *WIFI_SSID = "your_wifi_ssid";
+const char *WIFI_PASSWORD = "your_wifi_password";
 
 // Firebase credentials (project settings)
 #define API_KEY "AIzaSyB9KUjHxzq8ktsL9-K8-XKoA4cPEk6EWzU"
 #define DATABASE_URL "https://mehuliot-default-rtdb.asia-southeast1.firebasedatabase.app/"
-#define USER_EMAIL "replace_with_email"
-#define USER_PASSWORD "replace_with_password"
+#define USER_EMAIL "rover@mehuliot.com"
+#define USER_PASSWORD "choudhary2005"
 
 // Firebase objects
 FirebaseData fbdo;
