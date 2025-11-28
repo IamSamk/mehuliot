@@ -52,6 +52,7 @@ float lastTemperature = NAN;
 bool buzzerState = false;
 bool manualBuzzerOverride = false;
 uint16_t lastDistance = MAX_DISTANCE_CM;
+bool lastFlameDetected = false;
 
 // Utility to perform ultrasonic distance measurement
 uint16_t measureDistanceCm()
@@ -126,12 +127,10 @@ void pushStatus()
     return;
   }
 
-  bool flameDetected = digitalRead(FLAME_PIN) == LOW;
-
   FirebaseJson statusJson;
   statusJson.set("angle", servoAngle);
   statusJson.set("temperature", isnan(lastTemperature) ? nullptr : lastTemperature);
-  statusJson.set("flame", flameDetected ? "FIRE" : "SAFE");
+  statusJson.set("flame", lastFlameDetected ? "FIRE" : "SAFE");
   statusJson.set("buzzer", buzzerState ? "ON" : "OFF");
   statusJson.set("distance", lastDistance);
   statusJson.set("updatedAt", millis());
@@ -215,11 +214,14 @@ void loop()
   readBuzzerRemote();
 
   bool obstacleClose = distance <= BUZZER_TRIGGER_DISTANCE_CM;
+  bool flameDetected = digitalRead(FLAME_PIN) == LOW;
+  lastFlameDetected = flameDetected;
+  bool hazardDetected = obstacleClose || flameDetected;
   if (!manualBuzzerOverride)
   {
-    if (obstacleClose != buzzerState)
+    if (hazardDetected != buzzerState)
     {
-      buzzerState = obstacleClose;
+      buzzerState = hazardDetected;
       digitalWrite(BUZZER_PIN, buzzerState ? HIGH : LOW);
     }
   }

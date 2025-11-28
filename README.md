@@ -45,11 +45,11 @@ A BLE-enabled ESP32 rover sweeps an ultrasonic sensor from 0–180° using a ser
    - `/status.temperature` contains the most recent value.
 
 4. **Flame Detection**
-   - `digitalRead(FLAME_PIN)` runs every status push; `LOW` becomes `"FIRE"`.
-   - Updates `/status.flame`.
+   - `digitalRead(FLAME_PIN)` runs every sweep loop and status push; `LOW` becomes `"FIRE"`.
+   - Updates `/status.flame` and marks the rover as hazard for the buzzer logic.
 
 5. **Buzzer Control**
-   - Automatic trigger: if `distance <= BUZZER_TRIGGER_DISTANCE_CM` (default 60 cm), buzzer turns on.
+   - Automatic trigger: buzzer sounds when `distance <= BUZZER_TRIGGER_DISTANCE_CM` (default 60 cm) **or** a flame is detected.
    - Manual override: write `/commands/buzzer = "ON"`, `"OFF"`, or `"AUTO"` via Firebase / dashboard.
    - `/status.buzzer` always matches the actual GPIO output.
 
